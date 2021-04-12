@@ -1,0 +1,26 @@
+<nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Employee List</h3>
+        </div>
+        <ul class="list-unstyled components">
+            <li>
+                <a href={% url 'employee_homepage' %}> Home </a>
+            </li>
+            <li>
+                <a href={% url 'userprofile' %}>Profile</a>
+            </li>
+            <li>
+                <a href="{% url 'password_change' %}">Change Password</a>
+            </li>
+            <li>
+                <a href={% url 'AddAppointment' %}>Add Appointments</a>
+            </li>
+            <li>
+                <a href={% url 'EmpListView' %}>View Appointments</a>
+            </li>
+            <li>
+                <a href={% url 'logoutuser' %}>Logout</a>
+            </li>
+        </ul>
+</nav>
+

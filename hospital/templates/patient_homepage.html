@@ -7,21 +7,41 @@
 </head>
 
 <body>
-    <div id="wrapper">
+<div class="wrapper">
 
-        <div class="page-content-wrapper">
-            {% include 'patient_navbar.html' %}
-            <div class="container-fluid"><a class="btn btn-link" role="button" id="menu-toggle" href="#menu-toggle"><i class="fa fa-bars"></i></a>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div>
-                            <h1 class="text-center">You are sucessfully logged in..{{ user.first_name }}</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    {% include 'patient_sidebar.html' %}
+
+    <!-- Page Content -->
+
+        <div class="container-fluid">
+                <p><button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fa fa-align-left"></i>
+                    <span>Menu</span>
+                </button>
+                </p>
+                <p>
+                    <h1 class="text-center">You are sucessfully logged in..{{ user }}
+                    <h3 class="text-center">Patient Details:</h3>
+                    <table>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                          <th>Blood Group</th>
+                      </tr>
+                      <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.address }}</td>
+                        <td>{{ user.bloodgroup }}</td>
+                      </tr>
+                    </table>
+                     </h1>
+                </p>
         </div>
-    </div>
+
+</div>
 <script src="{% static 'hospital/js/jquery.min.js' %}"></script>
 <script src="{% static 'hospital/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'hospital/js/back-to-top-scroll.js' %}"></script>

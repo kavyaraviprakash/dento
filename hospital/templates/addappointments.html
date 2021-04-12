@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include 'navbar.html' %}
+     {% load static %}
+</head>
+
+<body>
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    {% include 'patient_sidebar.html' %}
+
+    <!-- Page Content -->
+
+        <div class="container-fluid">
+                <p><button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fa fa-align-left"></i>
+                    <span>Menu</span>
+                </button>
+                </p>
+        <html>
+<body>
+        {% block content %}
+            <center>
+            <h1> Make an appointment </h1>
+            <br><br/>
+            {% if submitted %}
+
+            <h5>   Appointment booked successfully !!! </h5>
+
+            {% else %}
+                  <form action="" method = POST>
+                {% csrf_token %}
+
+                   {{ form.as_p }}
+
+                   <input type = "submit" value="Submit" class="btn btn-primary">
+
+                </form>
+            {% endif %}
+
+            </center>
+{% endblock %}
+
+</body>
+
+</html>

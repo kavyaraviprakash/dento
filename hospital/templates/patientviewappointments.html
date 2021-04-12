@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include 'navbar.html' %}
+     {% load static %}
+</head>
+
+<body>
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    {% include 'patient_sidebar.html' %}
+
+    <!-- Page Content -->
+
+        <div class="container-fluid">
+                <p><button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fa fa-align-left"></i>
+                    <span>Menu</span>
+                </button>
+                </p>
+        <html>
+<body>
+            <center>
+            <h1> View appointment </h1>
+            <br><br/>
+           <ul class = "collapsible popout text-center" data-collapsible = "accordion">
+               {% for Appointment in object_list %}
+                        <li class="card">
+                            <div class = "card-header collapsible-header">
+                                <h5 style="color:blue;"><a><i class="fa fa-calendar-check-o"></i>  {{ Appointment.patientname }} appointment with {{ Appointment.doctorname }} on {{Appointment.appointmentdate}}</a></h5>
+                            </div>
+                            <div class = "card-body collapsible-body">
+                                <table align="center" class="table-primary" style="font-size: 19px;">
+                                    <tr>
+                                        <td>Doctor Name:</td>
+                                        <td>{{Appointment.doctorname}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Patient Name:</td>
+                                        <td>{{Appointment.patientname}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Appointment Date:</td>
+                                        <td>{{Appointment.appointmentdate}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Appointment Time:</td>
+                                        <td>{{Appointment.appointmenttime}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Symptoms:</td>
+                                        <td>{{Appointment.symptoms}}</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
+                    {% endfor %}
+
+</body>
+
+</html>

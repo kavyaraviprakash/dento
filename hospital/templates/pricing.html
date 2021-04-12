@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
+{% load static %}
+{% include 'navbar.html' %}
+{% block content %}
 <head>
   <meta charset="UTF-8">
   <meta name="description" content="Dento - Dentist &amp; Medical HTML Template">
@@ -409,6 +409,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
   <script src="js/dento.bundle.js"></script>
   <!-- Active js -->
   <script src="js/default-assets/active.js"></script>
+
+{% endblock %}
 
 </body>
 

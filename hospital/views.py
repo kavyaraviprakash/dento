@@ -1,10 +1,16 @@
-from django.contrib.auth.models import Group
-from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User, Group
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from .models import Doctor, Patient, Appointment, Receptionist
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import ListView, DeleteView, UpdateView
 
-from hospital.forms import CustomUserCreationForm
+from .models import Patient, Appointment
+
+from hospital.forms import CustomUserCreationForm, CustomUserChangeForm, AppointmentForm
 
 
 def about(request):
@@ -12,7 +18,7 @@ def about(request):
 
 
 def contact(request):
-    return render(request, 'templates/contact.html', {})
+    return render(request, 'contact.html', {})
 
 
 def pricing(request):
@@ -32,7 +38,7 @@ def home(request):
         userT = request.user
         if userT.is_superuser:
             print("SENDING A SUPERUSER")
-            return redirect('admin_homepage')
+            return redirect('employee_homepage')
             # return HttpResponseRedirect(reverse('admin:index'))
         elif str(userT.groups.get()) == 'patient':
             return redirect('patient_homepage')
@@ -59,7 +65,7 @@ def loginuser(request):
                 login(request, user)
             if user.is_superuser:
                 print("SENDING A SUPERUSER")
-                return redirect('admin_homepage')
+                return redirect('employee_homepage')
                 # return HttpResponseRedirect(reverse('admin:index'))
             elif str(user.groups.get()) == 'patient':
                 return redirect('patient_homepage')
@@ -70,10 +76,10 @@ def loginuser(request):
         else:
             info = 'Username OR password is incorrect'
             form = AuthenticationForm(request.POST)
-            return render(request, 'login.html', {'form': form, 'info': info})
+            return render(request, 'registration/login.html', {'form': form, 'info': info})
     else:
         form = AuthenticationForm(request.POST)
-        return render(request, 'login.html', {'form': form})
+        return render(request, 'registration/login.html', {'form': form})
 
 
 def signup(request):
@@ -87,14 +93,16 @@ def signup(request):
             login(request, user)
             group = Group.objects.get(name='patient')
             user.groups.add(group)
+            user.is_patient = True
+            user.save()
             return redirect('patient_homepage')
     else:
         form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
 
-def admin_homepage(request):
-    return render(request, 'admin_homepage.html')
+def employee_homepage(request):
+    return render(request, 'employee_homepage.html')
 
 
 def patient_homepage(request):
@@ -107,3 +115,82 @@ def receptionist_homepage(request):
 
 def doctor_homepage(request):
     return render(request, 'doctor_homepage.html')
+
+
+def logoutuser(request):
+    logout(request)
+    return redirect('home')
+
+
+class userprofile(generic.UpdateView):
+    form_class = CustomUserChangeForm
+    template_name = 'pateintprofile.html'
+    success_url = reverse_lazy('home')
+
+    def get_object(self):
+        return self.request.user
+
+
+def MakeAppointments(request):
+    submitted = False
+    if request.method == "POST":
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return HttpResponseRedirect('/appointment?submitted=True')
+    else:
+        form = AppointmentForm
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'makeappointments.html', {'form': form, 'submitted': submitted})
+
+
+class AppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'patientviewappointments.html'
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Appointment.objects.all()
+        else:
+            return Appointment.objects.filter(author=self.request.user)
+
+
+class EmpListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'emppatientviewappointments.html'
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Appointment.objects.all()
+        else:
+            return Appointment.objects.filter(author=self.request.user.is_patient)
+
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    template_name = 'appointment_delete.html'
+    success_url = 'EmpListView'
+
+
+def AddAppointment(request):
+    submitted = False
+    if request.method == "POST":
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return HttpResponseRedirect('/appointment?submitted=True')
+    else:
+        form = AppointmentForm
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'addappointments.html', {'form': form, 'submitted': submitted})
+
+class empAppEdit(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    fields = ['doctorname', 'doctoremail', 'patientname', 'patientemail', 'symptoms', 'prescription',
+              ]
+    template_name = 'employee_appointment.html'
+    success_url = reverse_lazy('employee_homepage')
