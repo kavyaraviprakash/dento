@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include 'navbar.html' %}
+    {% load static %}
+</head>
+
+<body>
+    <div id="wrapper">
+
+        <div class="page-content-wrapper">
+            {% include 'patient_navbar.html' %}
+            <div class="container-fluid"><a class="btn btn-link" role="button" id="menu-toggle" href="#menu-toggle"><i class="fa fa-bars"></i></a>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <h1 class="text-center">You are sucessfully logged in..{{ user.first_name }}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="{% static 'hospital/js/jquery.min.js' %}"></script>
+<script src="{% static 'hospital/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'hospital/js/back-to-top-scroll.js' %}"></script>
+<script src="{% static 'hospital/js/Bold-BS4-Animated-Back-To-Top.js' %}"></script>
+<script src="{% static 'hospital/js/bs-init.js' %}"></script>
+<script src="{% static 'hospital/js/Sidebar-Menu.js' %}"></script>
+</body>
+
+</html>
